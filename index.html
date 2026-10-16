@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>成語練功房｜康軒五上</title>
+<style>
+/* 教育部標準楷書（中華民國教育部，CC BY-ND 3.0 TW）：依序使用裝置已安裝的字型、網站 fonts 資料夾內的原始字型檔 */
+@font-face{
+  font-family:"EduKai";
+  src:local("TW-MOE-Std-Kai"),local("教育部標準楷書"),
+      url("fonts/edukai-5.0.ttf") format("truetype"),
+      url("fonts/edukai-4.0.ttf") format("truetype");
+  font-display:swap;
+}
+:root{
+  --paper:#F5F8F0; --card:#FFFFFF; --grid:#7DB58A; --grid-soft:#D6E9DA;
+  --ink:#1F2D3A; --muted:#5A6A63; --red:#D2373B; --red-soft:#FCE6E4;
+  --blue:#2A68AD; --blue-soft:#E3EEFA; --yellow:#FFE07A; --ok:#2E8B57; --ok-soft:#E1F3E8;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#151D18; --card:#1F2922; --grid:#4F8C5E; --grid-soft:#2A3B2F;
+    --ink:#ECF2EC; --muted:#A3B5AA; --red:#FF6F6A; --red-soft:#402424;
+    --blue:#82B5F0; --blue-soft:#1F2F44; --yellow:#7A6620; --ok:#5CC98A; --ok-soft:#1E3A2A;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#151D18; --card:#1F2922; --grid:#4F8C5E; --grid-soft:#2A3B2F;
+  --ink:#ECF2EC; --muted:#A3B5AA; --red:#FF6F6A; --red-soft:#402424;
+  --blue:#82B5F0; --blue-soft:#1F2F44; --yellow:#7A6620; --ok:#5CC98A; --ok-soft:#1E3A2A;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;min-height:100%;color:var(--ink);
+  font-family:"EduKai","TW-MOE-Std-Kai","教育部標準楷書","DFKai-SB","BiauKai","標楷體",serif;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid-soft) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-soft) 1px,transparent 1px);
+  background-size:32px 32px;
+  font-size:18px;line-height:1.6;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 48px}
+
+/* 田字格 */
+.tz{display:inline-flex;gap:0}
+.tz span{
+  width:var(--s,64px);height:var(--s,64px);display:inline-flex;align-items:center;justify-content:center;
+  font-size:calc(var(--s,64px)*.68);font-weight:700;line-height:1;
+  border:2px solid var(--grid);margin-left:-2px;background-color:var(--card);
+  background-image:
+    linear-gradient(to right,transparent calc(50% - .5px),var(--grid-soft) calc(50% - .5px),var(--grid-soft) calc(50% + .5px),transparent calc(50% + .5px)),
+    linear-gradient(to bottom,transparent calc(50% - .5px),var(--grid-soft) calc(50% - .5px),var(--grid-soft) calc(50% + .5px),transparent calc(50% + .5px));
+}
+.tz span:first-child{margin-left:0}
+.tz span.hole{color:var(--red);background-color:var(--red-soft)}
+.tz span.filled{color:var(--blue)}
+
+/* Home */
+.hero{text-align:center;padding:12px 0 8px}
+.hero .tz{--s:clamp(52px,14vw,84px)}
+.hero p{margin:12px 0 0;color:var(--muted)}
+.panel{background:var(--card);border:2px solid var(--grid);border-radius:18px;padding:18px;margin-top:22px}
+.panel h2{margin:0 0 4px;font-size:22px}
+.panel .hint{margin:0 0 14px;color:var(--muted);font-size:16px}
+.lessons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (min-width:620px){.lessons{grid-template-columns:repeat(6,1fr)}}
+.lesson{
+  border:2px solid var(--grid);background:var(--paper);border-radius:14px;padding:10px 6px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+.lesson b{font-size:22px}
+.lesson small{color:var(--muted);font-size:14px}
+.lesson[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.lesson[aria-pressed="true"] small{color:#fff;opacity:.9}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.pill{border:2px solid var(--grid);background:var(--paper);border-radius:999px;padding:6px 16px;font-size:16px}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.row .label{color:var(--muted);font-size:16px;margin-right:4px}
+
+.games{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:560px){.games{grid-template-columns:1fr 1fr}}
+.game{
+  display:flex;gap:14px;align-items:center;text-align:left;
+  border:2px solid var(--grid);background:var(--paper);border-radius:16px;padding:14px;
+  transition:transform .12s;
+}
+.game:active{transform:scale(.98)}
+.game .ico{font-size:34px;width:56px;height:56px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:14px;border:2px dashed var(--grid)}
+.game b{display:block;font-size:20px}
+.game small{color:var(--muted);font-size:15px;line-height:1.4;display:block}
+.warn{color:var(--red);font-size:16px;min-height:1.6em;margin:8px 0 0}
+
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.gr{border:2px solid var(--grid);background:var(--paper);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.gr b{font-size:clamp(18px,5vw,22px)}
+.gr small{color:var(--muted);font-size:13px}
+.gr[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.gr[aria-pressed="true"] small{color:#fff;opacity:.9}
+
+.tz span,.choice,.tile,.mcard,.blank,.witem b,.qtext,.feedback p,.back-side p,.zy{font-synthesis:none;font-synthesis-weight:none}
+.tz span,.choice,.tile,.mcard.idiom,.witem b{font-weight:400}
+.pron{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:8px 0 4px}
+.tagmoe{display:inline-block;font-size:14px;color:#fff;background:var(--ok);border-radius:8px;padding:0 8px}
+.zy{font-size:clamp(17px,4.6vw,21px);color:var(--ink)}
+a.moe{font-size:15px;color:var(--blue);text-underline-offset:3px}
+.zy-s{font-size:16px;color:var(--ink);letter-spacing:.05em}
+.bian{font-size:15px;color:var(--muted);margin:0 0 4px}
+a.moe{display:inline-block;margin:0 0 6px}
+.sy{white-space:nowrap;display:inline-block;margin-right:.4em}
+.bar h2{font-size:clamp(18px,4.8vw,22px)}
+
+.lessons.titled{grid-template-columns:repeat(2,1fr)}
+@media (min-width:620px){.lessons.titled{grid-template-columns:repeat(3,1fr)}}
+.lesson small.lt{font-size:15px;color:var(--ink);line-height:1.35}
+.lesson[aria-pressed="true"] small.lt{color:#fff}
+
+/* Game screen */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.back{border:2px solid var(--grid);background:var(--card);border-radius:12px;padding:6px 14px;font-size:16px}
+.bar h2{margin:0;font-size:22px;flex:1}
+.score{font-size:16px;color:var(--muted)}
+.score b{color:var(--red);font-size:20px}
+.progress{height:10px;background:var(--card);border:2px solid var(--grid);border-radius:999px;overflow:hidden;margin:12px 0 18px}
+.progress i{display:block;height:100%;background:var(--grid);width:0;transition:width .3s}
+
+.qcard{position:relative;background:var(--card);border:2px solid var(--grid);border-radius:18px;padding:22px 18px;text-align:center}
+.qtag{display:inline-block;font-size:15px;color:var(--muted);margin-bottom:8px}
+.qtext{font-size:clamp(20px,5vw,26px);line-height:1.7;margin:0}
+.blank{display:inline-block;min-width:4.4em;border-bottom:3px solid var(--red);color:var(--red);margin:0 4px}
+.qcard .tz{--s:clamp(58px,17vw,84px);margin:6px 0}
+
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.choice{
+  position:relative;background:var(--card);border:2px solid var(--ink);border-radius:16px;
+  padding:16px 8px;font-size:clamp(22px,6vw,28px);font-weight:700;min-height:72px;
+}
+.choice.big{font-size:clamp(32px,10vw,44px)}
+.choice:disabled{cursor:default}
+.choice.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.choice.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red);text-decoration:line-through}
+.choice.dim{opacity:.45}
+
+.circle{
+  position:absolute;inset:-6px;border:4px solid var(--red);border-radius:50%;pointer-events:none;
+  animation:draw .35s ease-out;
+}
+@keyframes draw{from{transform:scale(1.4);opacity:0}to{transform:scale(1);opacity:1}}
+
+.feedback{margin-top:16px;border-radius:16px;padding:14px 16px;text-align:left;display:none}
+.feedback.show{display:block;animation:pop .25s ease-out}
+.feedback.good{background:var(--ok-soft);border:2px solid var(--ok)}
+.feedback.bad{background:var(--red-soft);border:2px solid var(--red)}
+.feedback h3{margin:0 0 6px;font-size:22px}
+.feedback p{margin:4px 0;font-size:17px}
+.feedback .fx{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:14px;padding:10px 20px;font-size:18px;font-weight:700}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.speak{border:2px solid var(--grid);background:var(--card);border-radius:12px;padding:4px 12px;font-size:16px}
+
+/* scramble */
+.tiles{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.tile{
+  width:clamp(62px,18vw,80px);height:clamp(62px,18vw,80px);font-size:clamp(34px,10vw,44px);font-weight:700;
+  border:2px solid var(--ink);border-radius:14px;background:var(--yellow);color:var(--ink);
+}
+.tile:disabled{visibility:hidden}
+.slots .tz span{cursor:pointer}
+
+/* memory */
+.mem{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (min-width:620px){.mem{grid-template-columns:repeat(4,1fr)}}
+.mcard{
+  min-height:118px;border-radius:14px;border:2px solid var(--grid);background:var(--grid);
+  padding:8px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:15px;line-height:1.45;color:transparent;transition:transform .25s,background .2s;
+}
+.mcard::before{content:"？";font-size:34px;color:var(--card);font-weight:700}
+.mcard.open,.mcard.done{background:var(--card);color:var(--ink)}
+.mcard.open::before,.mcard.done::before{content:none}
+.mcard.open{transform:rotateY(0);border-color:var(--blue);box-shadow:0 0 0 2px var(--blue) inset}
+.mcard.idiom{font-size:clamp(20px,5vw,26px);font-weight:700}
+.mcard.done{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);cursor:default}
+.mcard.miss{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* flashcards */
+.flash{min-height:300px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.flash .back-side{text-align:left;width:100%}
+.flash .back-side p{margin:8px 0;font-size:19px}
+.tagred,.tagblue{display:inline-block;font-size:15px;color:#fff;border-radius:8px;padding:0 8px;margin-right:6px;vertical-align:2px}
+.tagred{background:var(--red)}
+.tagblue{background:var(--blue)}
+.flash-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+
+
+/* comic */
+.strip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 14px}
+.panel-c{position:relative;aspect-ratio:1/1;border:3px solid var(--ink);border-radius:6px;background:var(--paper);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:8px}
+.panel-c .scene{position:absolute;right:6px;bottom:4px;font-size:clamp(40px,12vw,72px);opacity:.35}
+.panel-c .who{white-space:nowrap;font-size:clamp(30px,10vw,68px);line-height:1;text-align:left;position:relative}
+.bubble{position:relative;background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:6px 10px;font-size:clamp(14px,3.8vw,18px);line-height:1.45;text-align:left;align-self:flex-start;max-width:100%}
+.bubble::after{content:"";position:absolute;left:18px;bottom:-10px;width:14px;height:14px;background:var(--card);border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(45deg)}
+.bubble.narr{border-radius:4px;background:var(--yellow);color:var(--ink)}
+.bubble.narr::after{content:none}
+.pnum{position:absolute;left:0;top:0;background:var(--ink);color:var(--paper);font-size:13px;padding:0 7px;border-bottom-right-radius:6px}
+
+.note{margin:28px 0 0;text-align:center;color:var(--muted);font-size:14px;line-height:1.6}
+/* result */
+.result{text-align:center}
+.stamp{
+  display:inline-flex;align-items:center;justify-content:center;width:150px;height:150px;border-radius:50%;
+  border:6px double var(--red);color:var(--red);font-size:44px;font-weight:700;transform:rotate(-12deg);
+  margin:10px auto;animation:stamp .45s cubic-bezier(.3,1.6,.6,1);
+}
+@keyframes stamp{from{transform:rotate(-12deg) scale(2.2);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:1}}
+.result .big{font-size:24px;margin:6px 0}
+.wronglist{text-align:left;margin-top:18px}
+.wronglist h3{font-size:20px;margin:0 0 8px}
+.witem{background:var(--card);border:2px solid var(--grid);border-radius:14px;padding:10px 14px;margin-bottom:8px}
+.witem b{font-size:21px;color:var(--blue)}
+.witem p{margin:2px 0;font-size:16px;color:var(--muted)}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const DATA = {
+ 5:{lessons:[{"n": 1, "title": "蚊帳大使", "items": [["大聲疾呼", "疾", "指大聲而急促的呼喊。後也用來比喻大力的提倡、號召。", "專家大聲疾呼，請大家少用塑膠袋保護海洋。"], ["死灰復燃", "死", "⑴已經熄滅的灰燼，又重新燃燒起來。 ⑵比喻已經平息的事情，又重新活動起來。", "營火看起來熄滅了，沒想到又死灰復燃，冒出火苗。"], ["碩果僅存", "存", "沒被摘食而留下來的大果實。比喻經過世事汰換而極少數留存的可貴人物或成果。", "這棵老榕樹是村子裡碩果僅存的百年大樹。"], ["集思廣益", "集", "集結眾人的智慧，廣泛吸收有益的意見。", "為了布置教室，全班集思廣益，想出了好多點子。"], ["寄人籬下", "寄", "⑴寄居他人屋下生活。比喻依附他人，而不能自立。 ⑵比喻文章著述因襲他人，而不能自創一格。", "她小時候寄人籬下，住在親戚家，凡事都很小心。"], ["赴湯蹈火", "赴", "甘願奔投至烈火沸水當中。比喻奮不顧身，不避艱險。", "為了守護村民，那位勇士願意赴湯蹈火。"]]}, {"n": 2, "title": "從空中看臺灣", "items": [["德高望重", "德", "形容人品德高尚，極有聲望。", "村長德高望重，大家有困難都會找他商量。"], ["微乎其微", "乎", "形容事物極其細小或精微。", "這次颱風離我們很遠，造成的影響微乎其微。"], ["哀鴻遍野", "哀", "找不到棲身之所的鴻雁，悲傷哀痛的鳴叫。後用以比喻到處都是流離失所的難民。", "大地震過後，災區哀鴻遍野，令人難過。"], ["抱殘守缺", "殘", "固守舊有殘缺的經文不放。後用以比喻固守舊有事物或思想，而不知改進變通。", "時代在進步，如果一直抱殘守缺，就會被淘汰。"], ["同流合汙", "汙", "隨世俗浮沉。後多指跟壞人一起做壞事。", "壞朋友找他去偷東西，他拒絕同流合汙。"], ["當機立斷", "斷", "當下立刻作出決斷，毫不遲疑。", "看到天色變暗，領隊當機立斷，帶大家下山。"]]}, {"n": 3, "title": "攀岩高手", "items": [["疾風勁草", "勁", "指經過猛烈大風的吹襲，才知道堅韌的草挺立不倒。比喻在艱難困苦的環境下，才能考驗出人的堅強意志和節操。", "在困難中仍然堅持的人，就像疾風勁草一樣讓人佩服。"], ["隱惡揚善", "隱", "隱藏他人的惡行，宣揚他人的善行。", "外婆總是隱惡揚善，只說別人的好話。"], ["暗箭傷人", "箭", "在隱蔽處放箭傷害他人。比喻暗中用陰險的手段傷害人。", "有意見就當面說，不要在背後暗箭傷人。"], ["適可而止", "止", "指事情做到恰到好處就該停止。", "玩電腦要適可而止，眼睛才能休息。"], ["羽毛未豐", "豐", "羽毛尚未長滿成熟。比喻勢力或能力不夠雄厚，還不足以獨當一面。", "小鷹羽毛未豐，還不能自己飛上天空。"], ["百折不撓", "折", "意志剛強，即使受到很多挫折，仍不屈服。", "他參加比賽失敗了好幾次，卻百折不撓，終於得到冠軍。"]]}, {"n": 4, "title": "恆久的美", "items": [["養精蓄銳", "養", "保養精神，積蓄力量。", "比賽前一天，選手們早早休息，養精蓄銳。"], ["飲水思源", "源", "喝水時就想起水的源頭。比喻人不忘本。", "我們要飲水思源，感謝爸媽的養育之恩。"], ["養尊處優", "養尊", "處在尊貴的地位，過著優越富裕的生活。", "那位王子從小養尊處優，從來沒做過家事。"], ["義正辭嚴", "嚴", "義理正當，措詞嚴厲。", "班長義正辭嚴的指出作弊是不對的行為。"], ["汗馬功勞", "勞", "汗馬，使戰馬辛苦勞累而流汗。﹁汗馬功勞﹂指征戰的功勞，亦泛指一般的功勞。", "這次比賽能得獎，隊長立下了汗馬功勞。"], ["怨聲載道", "怨", "道路上到處充滿了埋怨的聲音。形容群眾普遍的怨恨和不滿。", "公車突然停駛，民眾怨聲載道。"]]}, {"n": 5, "title": "它抓得住你／商標的故事", "items": [["沽名釣譽", "譽", "故意做作，用手段謀取名聲和讚譽。", "他捐錢只是為了上新聞，根本是沽名釣譽。"], ["當務之急", "務", "當前最急迫要做的事。", "颱風要來了，當務之急是把門窗關好。"], ["三令五申", "申", "再三命令告誡。", "老師三令五申，上課時不能玩手機。"], ["歷歷在目", "歷", "清楚明白的呈現在眼前。", "去年畢業旅行的點點滴滴，至今仍歷歷在目。"], ["出奇制勝", "勝", "發奇兵或用奇計制敵而獲勝。後用來比喻用奇特、創新的方法取得好效果。", "對手太強了，教練想出新戰術，才出奇制勝。"], ["橫行霸道", "霸", "形容凶橫不講理。", "那個大個子在球場上橫行霸道，大家都很怕他。"]]}, {"n": 6, "title": "故事「動」起來", "items": [["引經據典", "典", "引用經書典籍等作為說話、作文的依據。", "爺爺說話喜歡引經據典，常常引用古人的話。"], ["責無旁貸", "責", "自己應盡的責任，沒有理由推卸。", "身為值日生，把黑板擦乾淨是我責無旁貸的事。"], ["孤掌難鳴", "鳴", "比喻人孤立無助，不能成事。", "只有我一個人想辦活動，孤掌難鳴，根本辦不起來。"], ["漸入佳境", "佳", "比喻境況逐漸進展至美好的境界或興味漸濃。", "這部電影一開始有點無聊，後來漸入佳境，越看越好看。"], ["上行下效", "效", "在上位的人怎麼做，下面的人就起而效法。", "爸媽愛看書，孩子也跟著愛看書，這就是上行下效。"], ["以貌取人", "貌", "以容貌儀表作為評斷或選取人才的標準。", "那位穿著樸素的老先生其實是大企業家，千萬不能以貌取人。"]]}, {"n": 7, "title": "為生命找出口", "items": [["莫逆之交", "逆", "指心意相投的朋友。", "他們從小一起長大，是無話不談的莫逆之交。"], ["十拿九穩", "穩", "比喻很有把握。", "他練習了很久，這次比賽可說是十拿九穩。"], ["同病相憐", "憐", "有同樣不幸遭遇的人互相同情。", "兩個新轉學生同病相憐，很快就成了好朋友。"], ["分庭抗禮", "抗", "指分處庭中，相對設禮，以平等的禮節相見。比喻地位相當。", "這家小店的餐點好吃，能和大餐廳分庭抗禮。"], ["絡繹不絕", "絡", "形容連續不斷的樣子。", "連假時，遊樂園的遊客絡繹不絕。"], ["弱肉強食", "弱", "本指動物中弱者被強者吞食，用來比喻強者欺凌、吞併弱者。", "大自然中弱肉強食，動物們都要努力求生存。"]]}, {"n": 8, "title": "最勇敢的女孩", "items": [["爭先恐後", "恐", "指競相爭先，唯恐落後。", "下課鐘一響，同學們爭先恐後的跑向操場。"], ["先發制人", "制", "凡事先下手取得先機，才能制伏對方。", "比賽一開始，我們就先發制人，連得三分。"], ["傷天害理", "傷", "指為人處事違背天理，泯滅人性。", "虐待動物是傷天害理的行為。"], ["無懈可擊", "擊", "沒有任何破綻可讓人攻擊。形容非常嚴密，沒有缺失。", "她的演講內容完整、說得流暢，簡直無懈可擊。"], ["權宜之計", "權", "指因應某種時機而暫用的計謀。", "教室在整修，在禮堂上課只是權宜之計。"], ["蚍蜉撼樹", "撼", "指大螞蟻妄圖以自我之力去搖動大樹。比喻不自量力。", "小隊想挑戰冠軍隊，有人笑他們是蚍蜉撼樹。"]]}, {"n": 9, "title": "在挫折中成長", "items": [["進退維谷", "維", "形容前進後退都無路可走的困窘處境。", "答應了兩個朋友同一天的邀約，他進退維谷，不知道該怎麼辦。"], ["戰戰兢兢", "戰", "形容戒慎恐懼的樣子。", "第一次上台演講，他戰戰兢兢，聲音都在發抖。"], ["赤手空拳", "拳", "⑴指手中空無一物。 ⑵形容沒有一點憑藉。", "爸爸當年赤手空拳來到城市打拚，靠努力開了一家店。"], ["對症下藥", "症", "⑴針對病症開方用藥。 ⑵比喻針對癥結所在，做有效的處理。", "找到成績退步的原因，才能對症下藥。"], ["扶老攜幼", "幼", "扶著老人，牽著小孩。指男女老幼全體出動的情況。", "颱風來襲前，村民扶老攜幼，到學校避難。"], ["一觸即發", "即", "一經觸動就立即有所感發或反應。比喻很緊張的情勢或很危險的時刻。", "兩隊球迷互相叫罵，衝突一觸即發。"]]}, {"n": 10, "title": "山中寄情", "items": [["欲罷不能", "罷", "想要停止卻做不到。", "這本小說太精彩了，讓人一讀就欲罷不能。"], ["朝三暮四", "暮", "餵養猴子時，早晨給三升橡樹果實，晚上給四升。本為養猴人詐騙猴子的故事，用以比喻只變名目，不改實質。後用來比喻人心意不定、反覆無常。亦可用於比喻事物變化無定。", "他做事朝三暮四，一下要學鋼琴，一下又想學畫畫。"], ["掩耳盜鈴", "掩", "小偷盜鐘時，怕鐘所發出的聲音會引他人前來搶奪，因而急忙掩住自己的耳朵。後用來比喻妄想瞞騙他人，結果卻只是欺騙自己而已。", "考試作弊還以為老師不知道，簡直是掩耳盜鈴。"], ["賓至如歸", "歸", "客人來到這裡就好像回到自己的家裡。形容主人招待周到親切，使客人感到滿意。", "這家民宿的老闆很親切，讓客人有賓至如歸的感覺。"], ["孤陋寡聞", "陋", "形容學識淺薄，見聞不廣。", "多看書、多旅行，才不會孤陋寡聞。"], ["心曠神怡", "曠", "心情開朗，精神愉悅。", "站在山頂吹著涼風，讓人心曠神怡。"]]}, {"n": 11, "title": "與達駭黑熊走入山林", "items": [["驚濤駭浪", "駭", "猛烈的風浪。後亦用來比喻險惡的環境。", "漁船在驚濤駭浪中前進，船員們都很緊張。"], ["傾國傾城", "傾", "指傾覆城邦家國。形容女子的美豔，會帶來禍害。後用來形容女子極為美麗動人。", "故事裡的公主有著傾國傾城的美貌。"], ["步步為營", "營", "軍隊前進一程，就建立一個營壘，嚴防敵人攻擊。後用來比喻行動謹慎，防備周全。", "下棋時他步步為營，每一步都想得很仔細。"], ["一笑置之", "置", "笑一笑就把它擱放在一旁。形容不當成一回事。", "同學開他玩笑，他只是一笑置之，一點也不生氣。"], ["如虎添翼", "翼", "猛虎生出雙翅。比喻強有力者又增添生力軍，使之更強。", "球隊來了一位高大的中鋒，真是如虎添翼。"], ["不翼而飛", "翼", "指沒有翅膀也會飛走。原比喻消息、言論等不待推廣便迅速傳播。後來多用於比喻物品無故遺失。", "放在桌上的蛋糕不翼而飛，只剩下空盤子。"]]}, {"n": 12, "title": "荒島上的國王", "items": [["老馬識途", "途", "老馬認得走過的路。後用來比喻有經驗的人對情況比較熟悉，容易把工作做好。", "在山裡迷路時，多虧老獵人老馬識途，帶我們走出森林。"], ["捲土重來", "捲", "比喻兵敗後，重組兵力，再次來過。後用來比喻失敗後，重新整頓，再次來過。亦用於比喻恢復舊有的局面、局勢。", "這次比賽輸了沒關係，明年再捲土重來！"], ["垂頭喪氣", "喪", "低垂著頭，意氣消沉。形容失意沮喪的樣子。", "球隊輸了比賽，大家垂頭喪氣的走回休息室。"], ["困獸猶鬥", "獸", "被圍困的野獸尚且作最後的搏鬥。比喻處於絕境，仍然奮力抵抗。", "被包圍的壞人困獸猶鬥，還想做最後的反抗。"], ["死心塌地", "塌", "形容心意已定，不再改變。亦用來表示心裡踏實或放心之意。", "他死心塌地的支持這支球隊，每場比賽都到場加油。"], ["另起爐灶", "爐", "比喻另立門戶。亦用來比喻捨棄舊事物，重新來過。", "原本的計畫行不通，我們只好另起爐灶。"]]}],
+  comic:{"大聲疾呼": [["📣", "🧑‍🔬", "大家快來救救海洋！"], ["🌊", "🐢", "（海裡到處都是塑膠垃圾）"], "環保人士＿＿，請大家不要亂丟垃圾。"], "死灰復燃": [["🔥", "👨", "火已經滅了，我們走吧。"], ["🔥", "😱", "（一陣風吹過，灰燼裡又冒出火苗）"], "熄掉的炭火又＿＿，大家趕緊再澆水。"], "碩果僅存": [["🌳", "👴", "以前這裡有一整片森林。"], ["🌳", "👦", "現在只剩下這一棵老樹了……"], "這棵老樹是當地＿＿的古樹。"], "集思廣益": [["💡", "👩‍🏫", "園遊會要賣什麼呢？大家一起想！"], ["🙋", "🙋‍♀️", "賣冰！做手工餅乾！"], "全班＿＿，想出了很多好點子。"], "寄人籬下": [["🏠", "👦", "爸媽出國工作，我只好住在阿姨家……"], ["🍚", "😶", "（吃飯時總是不好意思多夾菜）"], "他住在別人家，過著＿＿的生活。"], "赴湯蹈火": [["🐉", "🤺", "惡龍來了！"], ["🛡️", "🤺", "為了保護大家，再危險我也不怕！"], "騎士為了保護村民，願意＿＿。"], "德高望重": [["🏘️", "👴", "（村裡的老村長，大家都很尊敬他）"], ["🏘️", "👨👩", "有事就請老村長幫忙評評理！"], "老村長＿＿，受到大家的尊敬。"], "微乎其微": [["🦠", "👩‍🔬", "在顯微鏡下才看得到這麼小的細菌。"], ["🔬", "😮", "哇，真的好小好小！"], "細菌小到肉眼看不見，真是＿＿。"], "哀鴻遍野": [["🌊", "🏚️", "（大水災沖毀了整個城鎮）"], ["⛺", "😭😭", "我們的家都沒了……"], "洪水過後，到處都是無家可歸的災民，＿＿。"], "抱殘守缺": [["📻", "👴", "我只用這台舊收音機，新東西我不學！"], ["📱", "👦", "爺爺，新手機很方便，可以試試看喔！"], "只肯守著舊的、不願意學新的，就是＿＿。"], "同流合汙": [["🍬", "😈", "我們一起去偷拿店裡的糖果！"], ["🙅", "👦", "不行！我不跟你們做壞事！"], "他不願意和壞人＿＿。"], "當機立斷": [["⛰️", "👨", "烏雲越來越多了……"], ["⛰️", "🧑‍✈️", "馬上下山，不要再往上爬了！"], "天氣變壞，領隊＿＿，決定立刻下山。"], "疾風勁草": [["🌬️", "🌾", "（強風把大樹都吹倒了）"], ["🌱", "🌱", "（只有一株小草還挺直的站著）"], "越是在困難中越堅強，就像＿＿。"], "隱惡揚善": [["🗣️", "👦", "小明今天有點粗心……"], ["🗣️", "👵", "不過他很熱心幫忙大家，這點很棒喔！"], "奶奶總是＿＿，常常稱讚別人的優點。"], "暗箭傷人": [["🏫", "😏", "（偷偷在背後說同學壞話）"], ["🏫", "😢", "大家為什麼突然都不理我？"], "在背後說壞話陷害別人，就是＿＿。"], "適可而止": [["🍬", "👦", "糖果好好吃，我還要再吃！"], ["🍬", "👩", "吃兩顆就好，吃太多會蛀牙喔！"], "吃甜食要＿＿，不能吃太多。"], "羽毛未豐": [["🪺", "🐣", "我也想飛！"], ["🪺", "🦅", "你的翅膀還沒長好，再等等吧！"], "小鳥＿＿，還不能離開鳥巢。"], "百折不撓": [["🚲", "🤕", "（騎腳踏車摔倒了好多次）"], ["🚲", "😁", "我再試一次——成功了！"], "他跌倒很多次也不放棄，真是＿＿。"], "養精蓄銳": [["🛏️", "😴", "明天要考試，今天早點睡。"], ["📝", "💪", "睡飽了，精神好好！"], "考試前一天好好休息，就是＿＿。"], "飲水思源": [["💧", "👦", "這口井的水好甜喔！"], ["🙏", "👴", "要記得感謝當年挖井的人喔！"], "喝水時想到挖井的人，這就是＿＿。"], "養尊處優": [["👑", "🤴", "幫我拿水，幫我穿鞋，幫我搧風……"], ["🧹", "🤴", "掃地？我從來沒做過！"], "這位王子＿＿，什麼事都有人幫他做。"], "義正辭嚴": [["📝", "😏", "考試時偷看一下又沒關係。"], ["📝", "😠", "作弊是不誠實的行為，絕對不可以！"], "她＿＿的說作弊是錯的，大家都很服氣。"], "汗馬功勞": [["🏀", "🏃", "（他一個人搶到好多球、投進好多分）"], ["🏆", "🙌", "謝謝你，我們才能拿冠軍！"], "這次奪冠，他立下了＿＿。"], "怨聲載道": [["🚧", "😠", "這條路又在挖了！"], ["🚧", "😤😤", "每天都塞車，煩死了！"], "道路一直施工，附近居民＿＿。"], "沽名釣譽": [["📸", "😏", "我捐一百元，記者快來拍照！"], ["📸", "🤨", "他只是想出名而已吧……"], "他做好事只是為了出名，真是＿＿。"], "當務之急": [["💧", "😱", "水管破了，水一直噴出來！"], ["🔧", "👨", "先把總開關關掉！"], "水管破了，＿＿就是趕快關水。"], "三令五申": [["📢", "👩‍🏫", "游泳時不能在池邊奔跑！"], ["📢", "👩‍🏫", "再說一次，不能跑喔！不能跑！"], "教練＿＿，提醒大家注意安全。"], "歷歷在目": [["📷", "👵", "這是我第一次去海邊的照片。"], ["🏖️", "😊", "那天的浪花、貝殼，我都還記得清清楚楚。"], "小時候的事，奶奶到現在還＿＿。"], "出奇制勝": [["♟️", "👴", "大家都以為我會這樣走……"], ["♟️", "😲", "沒想到你用這招！我輸了！"], "他用了誰都想不到的方法，＿＿。"], "橫行霸道": [["🛝", "😤", "溜滑梯是我的，誰都不准玩！"], ["🛝", "😢", "（其他小朋友都不敢靠近）"], "他在公園裡＿＿，大家都很怕他。"], "引經據典": [["📚", "👨‍🏫", "孔子說過：「學而時習之……」"], ["📚", "👨‍🏫", "《論語》裡還有一句……"], "教授說話時常常＿＿。"], "責無旁貸": [["🧹", "👩‍🏫", "今天誰是值日生？"], ["🧹", "👦", "是我！打掃教室是我該做的！"], "當值日生，打掃教室是我＿＿的工作。"], "孤掌難鳴": [["👏", "👦", "（一隻手拍不出聲音……）"], ["🙋", "😞", "只有我一個人想做，沒人跟我一起……"], "只有一個人支持，＿＿，事情很難完成。"], "漸入佳境": [["🎻", "😖", "（剛開始學小提琴，拉得好難聽）"], ["🎻", "😊", "（練了幾個月，越拉越好聽了）"], "他的琴藝越來越好，＿＿。"], "上行下效": [["📱", "👨", "（爸爸一直滑手機）"], ["📱", "👦", "（兒子也學爸爸一直滑手機）"], "大人怎麼做，小孩就跟著學，這叫做＿＿。"], "以貌取人": [["🧥", "😏", "他穿得那麼舊，一定很窮。"], ["💰", "😲", "原來他是有名的大老闆！"], "不能只看外表判斷一個人，不要＿＿。"], "莫逆之交": [["🤝", "👦👦", "我們從幼稚園就是好朋友！"], ["🤝", "👴👴", "（到老了還是最好的朋友）"], "兩個人是一輩子的＿＿。"], "十拿九穩": [["🏀", "😎", "這一球我練習了一千次！"], ["🏀", "🙌", "（投籃，空心進球！）"], "他練習了好久，這球可說是＿＿。"], "同病相憐": [["🦵", "🤕", "我腳受傷了，不能上體育課……"], ["🦵", "🤕", "我也是！我們一起坐在旁邊吧。"], "兩人都受了傷，＿＿，互相安慰。"], "分庭抗禮": [["🏪", "🏪", "（巷口的小麵店和對面的大餐廳）"], ["🍜", "😋", "小店的麵一點也不輸大餐廳！"], "這家小店和大餐廳＿＿，生意一樣好。"], "絡繹不絕": [["🎡", "🚶", "（一群人走進遊樂園）"], ["🎡", "🚶‍♀️🚶", "（又一群人，人一直來一直來）"], "假日的遊樂園遊客＿＿。"], "弱肉強食": [["🦁", "🦁", "（獅子追著羚羊）"], ["🌿", "🦓", "（弱小的動物只能拚命逃跑）"], "草原上的動物＿＿，生存很不容易。"], "爭先恐後": [["🍦", "👩", "免費冰淇淋，先到先拿！"], ["🏃", "🏃‍♀️", "我先！我先！"], "一聽到有免費冰淇淋，大家都＿＿的跑過去。"], "先發制人": [["⚽", "😤", "哨聲一響，我馬上衝過去！"], ["⚽", "⚽", "（對手還沒反應就射門得分）"], "他一開賽就＿＿，搶先得分。"], "傷天害理": [["🐱", "😈", "（有人故意丟石頭打流浪貓）"], ["🐱", "😠", "這樣做太殘忍了！"], "故意傷害小動物，是＿＿的事。"], "無懈可擊": [["🥅", "🧤", "左邊的球擋下！右邊的球也擋下！"], ["🥅", "😎", "今天一球都不讓你們進！"], "守門員今天的表現＿＿。"], "權宜之計": [["☔", "😵", "下大雨了，卻沒帶傘！"], ["🗞️", "😅", "先把報紙頂在頭上吧！"], "用報紙擋雨只是＿＿。"], "蚍蜉撼樹": [["🐜", "🐜", "我要把這棵大樹推倒！"], ["🌳", "🌳", "（大樹一動也不動）"], "小螞蟻想推倒大樹，真是＿＿，太不自量力了。"], "進退維谷": [["🌉", "😰", "前面的橋斷了！"], ["🐕", "😱", "後面又有一隻大狗追來……"], "前不能走、後不能退，真是＿＿。"], "戰戰兢兢": [["🧊", "😬", "（走在結冰的湖面上，一步一步慢慢走）"], ["🧊", "😰", "千萬不能掉下去……"], "他＿＿的走過冰面。"], "赤手空拳": [["🎒", "👨", "我什麼都沒有，只帶著一雙手來到城市。"], ["🏪", "😊", "二十年後，我開了自己的店！"], "爸爸當年＿＿，一路靠自己努力。"], "對症下藥": [["🤒", "👩‍⚕️", "你是喉嚨發炎，要吃這種藥。"], ["💊", "😊", "吃了藥，喉嚨就不痛了！"], "醫生找到病因再開藥，這就是＿＿。"], "扶老攜幼": [["🌊", "👨", "洪水要來了，大家快走！"], ["🏃", "👵👶", "（大人扶著老人、牽著小孩一起走）"], "大家＿＿，往高處避難。"], "一觸即發": [["🐱", "🐈", "嘶——！"], ["🐕", "😠", "（兩隻動物瞪著對方，毛都豎起來了）"], "貓和狗互相瞪著，一場打架＿＿。"], "欲罷不能": [["📖", "😮", "再看一章就好……"], ["🌙", "😵", "（已經半夜兩點了，還停不下來）"], "這本書太好看了，讓人＿＿。"], "朝三暮四": [["⚽", "👦", "我要參加足球社！"], ["🎨", "👦", "算了，我改參加美術社……不，還是熱舞社好了！"], "他一下想參加這個、一下想參加那個，真是＿＿。"], "掩耳盜鈴": [["🔔", "🙉", "我把耳朵摀起來，就聽不到鈴聲了！"], ["🔔", "👮", "可是大家都聽到了啊！"], "自己騙自己，以為別人不知道，就是＿＿。"], "賓至如歸": [["🏡", "👩", "歡迎歡迎！把這裡當自己家喔！"], ["🛏️", "😊", "住在這裡好舒服，就像在家一樣！"], "民宿老闆很親切，讓人＿＿。"], "孤陋寡聞": [["📱", "👦", "你知道什麼是無人機嗎？"], ["🤔", "👴", "無人……什麼機？我都沒聽過。"], "不常吸收新知，就容易＿＿。"], "心曠神怡": [["⛰️", "😌", "（站在山頂，看著藍天白雲）"], ["🌬️", "😊", "好涼的風，心情好舒服！"], "看著美麗的風景，讓人＿＿。"], "驚濤駭浪": [["🌊", "⛵", "（巨大的浪打向小船）"], ["🌊", "😱", "抓緊！又一個大浪來了！"], "小船在＿＿中搖來搖去。"], "傾國傾城": [["👸", "👸", "（美麗的公主走進大廳）"], ["👑", "😍😍", "（所有人都看呆了）"], "公主長得＿＿，大家都看呆了。"], "步步為營": [["♟️", "🤔", "這一步走下去，對手會怎麼回應呢？"], ["♟️", "🧐", "再想三步，確定安全才走。"], "他下棋時＿＿，非常小心。"], "一笑置之": [["😜", "😏", "你的頭髮好像鳥窩喔！"], ["😄", "😊", "哈哈，可能有小鳥要來住了！"], "被開玩笑時，他只是＿＿。"], "如虎添翼": [["🚲", "👦", "我本來就騎很快……"], ["🛵", "😎", "現在換了一台電動腳踏車，更快了！"], "本來就很強，又多了幫助，真是＿＿。"], "不翼而飛": [["🍰", "👦", "我把蛋糕放在桌上，先去洗手……"], ["🍽️", "😲", "咦？蛋糕怎麼不見了？"], "桌上的蛋糕竟然＿＿。"], "老馬識途": [["🌲", "😰", "我們迷路了……"], ["🐴", "👴", "跟著這匹老馬走，牠認得路！"], "爺爺對這座山很熟，就像＿＿一樣。"], "捲土重來": [["🏆", "😞", "今年輸了……"], ["💪", "😤", "明年我一定會再回來挑戰！"], "雖然輸了，他決定明年＿＿。"], "垂頭喪氣": [["📝", "😞", "考試考不好……"], ["🚶", "😔", "（低著頭慢慢走回家）"], "考不好，弟弟＿＿的回家了。"], "困獸猶鬥": [["🪤", "🐀", "（老鼠被困在角落）"], ["🪤", "🐀", "吱！吱！（還是拚命想咬人）"], "被逼到角落的老鼠還在掙扎，就是＿＿。"], "死心塌地": [["⚾", "🧢", "不管輸贏，我永遠支持這支球隊！"], ["⚾", "📣", "（下雨天也來看球）"], "他對這支球隊＿＿，從不改變。"], "另起爐灶": [["🏗️", "😩", "這個積木城堡怎麼蓋都會倒……"], ["🧱", "😊", "乾脆全部拆掉，換個方法重新蓋！"], "原來的方法不行，只好＿＿。"]}}
+};
+
+/* 注音來源：中華民國教育部《國語辭典簡編本》（版本編號：2014_20260929）；簡編本未收錄者依《重編國語辭典修訂本》；兩本皆未收錄者依單字讀音 */
+const ZY = {"大聲疾呼": {"zy": "ㄉㄚˋ ㄕㄥ ㄐㄧˊ ㄏㄨ", "src": "c"}, "死灰復燃": {"zy": "ㄙˇ ㄏㄨㄟ ㄈㄨˋ ㄖㄢˊ", "src": "c"}, "碩果僅存": {"zy": "ㄕㄨㄛˋ ㄍㄨㄛˇ ㄐㄧㄣˇ ㄘㄨㄣˊ", "src": "c"}, "集思廣益": {"zy": "ㄐㄧˊ ㄙ ㄍㄨㄤˇ ㄧˋ", "src": "c"}, "寄人籬下": {"zy": "ㄐㄧˋ ㄖㄣˊ ㄌㄧˊ ㄒㄧㄚˋ", "src": "c"}, "赴湯蹈火": {"zy": "ㄈㄨˋ ㄊㄤ ㄉㄠˋ ㄏㄨㄛˇ", "src": "c"}, "德高望重": {"zy": "ㄉㄜˊ ㄍㄠ ㄨㄤˋ ㄓㄨㄥˋ", "src": "c"}, "微乎其微": {"zy": "ㄨㄟˊ ㄏㄨ ㄑㄧˊ ㄨㄟˊ", "src": "c"}, "哀鴻遍野": {"zy": "ㄞ ㄏㄨㄥˊ ㄅㄧㄢˋ ㄧㄝˇ", "src": "c"}, "抱殘守缺": {"zy": "ㄅㄠˋ ㄘㄢˊ ㄕㄡˇ ㄑㄩㄝ", "src": "c"}, "同流合汙": {"zy": "ㄊㄨㄥˊ ㄌㄧㄡˊ ㄏㄜˊ ㄨ", "src": "c"}, "當機立斷": {"zy": "ㄉㄤ ㄐㄧ ㄌㄧˋ ㄉㄨㄢˋ", "src": "c"}, "疾風勁草": {"zy": "ㄐㄧˊ ㄈㄥ ㄐㄧㄥˋ ㄘㄠˇ", "src": "r"}, "隱惡揚善": {"zy": "ㄧㄣˇ ㄜˋ ㄧㄤˊ ㄕㄢˋ", "src": "c"}, "暗箭傷人": {"zy": "ㄢˋ ㄐㄧㄢˋ ㄕㄤ ㄖㄣˊ", "src": "r"}, "適可而止": {"zy": "ㄕˋ ㄎㄜˇ ㄦˊ ㄓˇ", "src": "c"}, "羽毛未豐": {"zy": "ㄩˇ ㄇㄠˊ ㄨㄟˋ ㄈㄥ", "src": "c"}, "百折不撓": {"zy": "ㄅㄞˇ ㄓㄜˊ ㄅㄨˋ ㄋㄠˊ", "src": "c"}, "養精蓄銳": {"zy": "ㄧㄤˇ ㄐㄧㄥ ㄒㄩˋ ㄖㄨㄟˋ", "src": "c"}, "飲水思源": {"zy": "ㄧㄣˇ ㄕㄨㄟˇ ㄙ ㄩㄢˊ", "src": "c"}, "養尊處優": {"zy": "ㄧㄤˇ ㄗㄨㄣ ㄔㄨˇ ㄧㄡ", "src": "c"}, "義正辭嚴": {"zy": "ㄧˋ ㄓㄥˋ ㄘˊ ㄧㄢˊ", "src": "r"}, "汗馬功勞": {"zy": "ㄏㄢˋ ㄇㄚˇ ㄍㄨㄥ ㄌㄠˊ", "src": "c"}, "怨聲載道": {"zy": "ㄩㄢˋ ㄕㄥ ㄗㄞˋ ㄉㄠˋ", "src": "c"}, "沽名釣譽": {"zy": "ㄍㄨ ㄇㄧㄥˊ ㄉㄧㄠˋ ㄩˋ", "src": "c"}, "當務之急": {"zy": "ㄉㄤ ㄨˋ ㄓ ㄐㄧˊ", "src": "c"}, "三令五申": {"zy": "ㄙㄢ ㄌㄧㄥˋ ㄨˇ ㄕㄣ", "src": "c"}, "歷歷在目": {"zy": "ㄌㄧˋ ㄌㄧˋ ㄗㄞˋ ㄇㄨˋ", "src": "c"}, "出奇制勝": {"zy": "ㄔㄨ ㄑㄧˊ ㄓˋ ㄕㄥˋ", "src": "c"}, "橫行霸道": {"zy": "ㄏㄥˋ ㄒㄧㄥˊ ㄅㄚˋ ㄉㄠˋ", "src": "c"}, "引經據典": {"zy": "ㄧㄣˇ ㄐㄧㄥ ㄐㄩˋ ㄉㄧㄢˇ", "src": "c"}, "責無旁貸": {"zy": "ㄗㄜˊ ㄨˊ ㄆㄤˊ ㄉㄞˋ", "src": "c"}, "孤掌難鳴": {"zy": "ㄍㄨ ㄓㄤˇ ㄋㄢˊ ㄇㄧㄥˊ", "src": "c"}, "漸入佳境": {"zy": "ㄐㄧㄢˋ ㄖㄨˋ ㄐㄧㄚ ㄐㄧㄥˋ", "src": "c"}, "上行下效": {"zy": "ㄕㄤˋ ㄒㄧㄥˊ ㄒㄧㄚˋ ㄒㄧㄠˋ", "src": "c"}, "以貌取人": {"zy": "ㄧˇ ㄇㄠˋ ㄑㄩˇ ㄖㄣˊ", "src": "c"}, "莫逆之交": {"zy": "ㄇㄛˋ ㄋㄧˋ ㄓ ㄐㄧㄠ", "src": "c"}, "十拿九穩": {"zy": "ㄕˊ ㄋㄚˊ ㄐㄧㄡˇ ㄨㄣˇ", "src": "c"}, "同病相憐": {"zy": "ㄊㄨㄥˊ ㄅㄧㄥˋ ㄒㄧㄤ ㄌㄧㄢˊ", "src": "c"}, "分庭抗禮": {"zy": "ㄈㄣ ㄊㄧㄥˊ ㄎㄤˋ ㄌㄧˇ", "src": "c"}, "絡繹不絕": {"zy": "ㄌㄨㄛˋ ㄧˋ ㄅㄨˋ ㄐㄩㄝˊ", "src": "c"}, "弱肉強食": {"zy": "ㄖㄨㄛˋ ㄖㄡˋ ㄑㄧㄤˊ ㄕˊ", "src": "c"}, "爭先恐後": {"zy": "ㄓㄥ ㄒㄧㄢ ㄎㄨㄥˇ ㄏㄡˋ", "src": "c"}, "先發制人": {"zy": "ㄒㄧㄢ ㄈㄚ ㄓˋ ㄖㄣˊ", "src": "c"}, "傷天害理": {"zy": "ㄕㄤ ㄊㄧㄢ ㄏㄞˋ ㄌㄧˇ", "src": "c"}, "無懈可擊": {"zy": "ㄨˊ ㄒㄧㄝˋ ㄎㄜˇ ㄐㄧˊ", "src": "c"}, "權宜之計": {"zy": "ㄑㄩㄢˊ ㄧˊ ㄓ ㄐㄧˋ", "src": "c"}, "蚍蜉撼樹": {"zy": "ㄆㄧˊ ㄈㄨˊ ㄏㄢˋ ㄕㄨˋ", "src": "c"}, "進退維谷": {"zy": "ㄐㄧㄣˋ ㄊㄨㄟˋ ㄨㄟˊ ㄍㄨˇ", "src": "c"}, "戰戰兢兢": {"zy": "ㄓㄢˋ ㄓㄢˋ ㄐㄧㄥ ㄐㄧㄥ", "src": "c"}, "赤手空拳": {"zy": "ㄔˋ ㄕㄡˇ ㄎㄨㄥ ㄑㄩㄢˊ", "src": "c"}, "對症下藥": {"zy": "ㄉㄨㄟˋ ㄓㄥˋ ㄒㄧㄚˋ ㄧㄠˋ", "src": "c"}, "扶老攜幼": {"zy": "ㄈㄨˊ ㄌㄠˇ ㄒㄧ ㄧㄡˋ", "src": "c"}, "一觸即發": {"zy": "ㄧ ㄔㄨˋ ㄐㄧˊ ㄈㄚ", "src": "c", "bian": "ㄧˊ ㄔㄨˋ ㄐㄧˊ ㄈㄚ"}, "欲罷不能": {"zy": "ㄩˋ ㄅㄚˋ ㄅㄨˋ ㄋㄥˊ", "src": "c"}, "朝三暮四": {"zy": "ㄓㄠ ㄙㄢ ㄇㄨˋ ㄙˋ", "src": "c"}, "掩耳盜鈴": {"zy": "ㄧㄢˇ ㄦˇ ㄉㄠˋ ㄌㄧㄥˊ", "src": "c"}, "賓至如歸": {"zy": "ㄅㄧㄣ ㄓˋ ㄖㄨˊ ㄍㄨㄟ", "src": "c"}, "孤陋寡聞": {"zy": "ㄍㄨ ㄌㄡˋ ㄍㄨㄚˇ ㄨㄣˊ", "src": "c"}, "心曠神怡": {"zy": "ㄒㄧㄣ ㄎㄨㄤˋ ㄕㄣˊ ㄧˊ", "src": "c"}, "驚濤駭浪": {"zy": "ㄐㄧㄥ ㄊㄠˊ ㄏㄞˋ ㄌㄤˋ", "src": "c"}, "傾國傾城": {"zy": "ㄑㄧㄥ ㄍㄨㄛˊ ㄑㄧㄥ ㄔㄥˊ", "src": "c"}, "步步為營": {"zy": "ㄅㄨˋ ㄅㄨˋ ㄨㄟˊ ㄧㄥˊ", "src": "c"}, "一笑置之": {"zy": "ㄧ ㄒㄧㄠˋ ㄓˋ ㄓ", "src": "c", "bian": "ㄧˊ ㄒㄧㄠˋ ㄓˋ ㄓ"}, "如虎添翼": {"zy": "ㄖㄨˊ ㄏㄨˇ ㄊㄧㄢ ㄧˋ", "src": "c"}, "不翼而飛": {"zy": "ㄅㄨˋ ㄧˋ ㄦˊ ㄈㄟ", "src": "c", "bian": "ㄅㄨˊ ㄧˋ ㄦˊ ㄈㄟ"}, "老馬識途": {"zy": "ㄌㄠˇ ㄇㄚˇ ㄕˋ ㄊㄨˊ", "src": "c"}, "捲土重來": {"zy": "ㄐㄩㄢˇ ㄊㄨˇ ㄔㄨㄥˊ ㄌㄞˊ", "src": "c"}, "垂頭喪氣": {"zy": "ㄔㄨㄟˊ ㄊㄡˊ ㄙㄤˋ ㄑㄧˋ", "src": "c"}, "困獸猶鬥": {"zy": "ㄎㄨㄣˋ ㄕㄡˋ ㄧㄡˊ ㄉㄡˋ", "src": "c"}, "死心塌地": {"zy": "ㄙˇ ㄒㄧㄣ ㄊㄚ ㄉㄧˋ", "src": "c"}, "另起爐灶": {"zy": "ㄌㄧㄥˋ ㄑㄧˇ ㄌㄨˊ ㄗㄠˋ", "src": "c"}};
+const MOE_URL = w => (ZY[w] && ZY[w].src === "r"
+  ? "https://dict.revised.moe.edu.tw/search.jsp?md=1&word="
+  : "https://dict.concised.moe.edu.tw/search.jsp?md=1&word=") + encodeURIComponent((ZY[w] && ZY[w].q) || w);
+const syl = t => (t || "").split(" ").filter(Boolean).map(x=>`<span class="sy">${x}</span>`).join(" ");
+const zy = w => syl(ZY[w] && ZY[w].zy);
+function pron(w){
+  const d = ZY[w] || {};
+  const bian = d.bian ? `<div class="bian">變調：${syl(d.bian)}</div>` : "";
+  const note = d.src === "r" ? `<div class="bian">《國語辭典簡編本》未收錄此成語，注音依《重編國語辭典修訂本》。</div>`
+    : d.src === "s" ? `<div class="bian">教育部辭典未收錄此成語，注音依《國語辭典簡編本》單字讀音。</div>`
+    : d.q ? `<div class="bian">教育部辭典寫作「${d.q}」。</div>` : "";
+  return `<div class="pron"><span class="tagmoe">教育部注音</span><span class="zy">${zy(w)||"（查無資料）"}</span></div>${bian}${note}`
+       + `<a class="moe" href="${MOE_URL(w)}" target="_blank" rel="noopener">到教育部辭典查詢 ↗</a>`;
+}
+document.addEventListener("click", e => {
+  if(e.target.closest && e.target.closest("a.moe")) e.stopPropagation();
+}, true);
+const ONE_GRADE = Object.keys(DATA).length === 1;
+const PUBLISHER = "康軒版";
+const GNAME = {3:"三",4:"四",5:"五",6:"六"};
+let GRADE, LESSONS, ALL, COMIC, ALLKEYS;
+function loadGrade(g){
+  GRADE=g; LESSONS=DATA[g].lessons; COMIC=DATA[g].comic; ALL=[];
+  LESSONS.forEach(L => L.items.forEach(([w,k,e,s],i) => ALL.push({id:L.n+"-"+i, lesson:L.n, w, keys:[...k], exp:e, sent:s})));
+  ALLKEYS = [...new Set(ALL.flatMap(x=>x.keys))];
+}
+
+const GAMES = [
+  {id:"comic", ico:"💬", name:"情境漫畫填空",   desc:"看漫畫猜情境，選出最適合的成語。"},
+  {id:"exp",   ico:"📖", name:"看解釋，選成語", desc:"讀解釋，從四個成語中選出正確的。"},
+  {id:"sent",  ico:"✏️", name:"造句填空",       desc:"句子少了一個成語，把它找回來！"},
+  {id:"miss",  ico:"🔍", name:"生字大搜查",     desc:"成語缺了一個字，選出正確的字。"},
+  {id:"order", ico:"🧩", name:"成語排排站",     desc:"四個字亂掉了，依順序點回來。"},
+  {id:"mem",   ico:"🃏", name:"翻翻配對",       desc:"翻開卡片，把成語和解釋配成一對。"},
+  {id:"flash", ico:"🗂️", name:"成語字卡",       desc:"一張一張看，點卡片看注音、解釋和例句。"}
+];
+
+const $app = document.getElementById("app");
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const tz = (str, cls=[]) => `<span class="tz">${[...str].map((c,i)=>`<span class="${cls[i]||""}">${c}</span>`).join("")}</span>`;
+
+/* ---------- settings ---------- */
+let S;
+function loadS(){
+  S = {lessons:LESSONS.map(l=>l.n).filter(n=>n<=6), count:10};
+  try{ const saved=JSON.parse(localStorage.getItem("kx5-cy-g"+GRADE)); if(saved&&Array.isArray(saved.lessons)) S=saved; }catch(e){}
+}
+const saveS = () => { try{ localStorage.setItem("kx5-cy-g"+GRADE, JSON.stringify(S)); }catch(e){} };
+function setGrade(g){
+  loadGrade(g); loadS();
+  try{ localStorage.setItem("kx5-cy-grade", String(g)); }catch(e){}
+  try{ history.replaceState(null, "", "#g"+g); }catch(e){}
+  document.title = "成語練功房｜康軒五上";
+}
+function initialGrade(){
+  const m = (location.hash||"").match(/g([3-6])/) || (location.search||"").match(/g=([3-6])/);
+  if(m && DATA[+m[1]]) return +m[1];
+  try{ const v=+localStorage.getItem("kx5-cy-grade"); if(DATA[v]) return v; }catch(e){}
+  return +Object.keys(DATA)[0];
+}
+const pool = () => ALL.filter(x => S.lessons.includes(x.lesson));
+
+/* ---------- 字型狀態 ---------- */
+let FONT_OK = null;
+function updateFontInfo(){
+  const el = document.getElementById("fontinfo");
+  if(!el) return;
+  if(FONT_OK === true) el.innerHTML = "<br>字型：教育部標準楷書（中華民國教育部，創用CC 姓名標示-禁止改作 3.0 臺灣版）。";
+  else if(FONT_OK === false) el.innerHTML = "<br>此裝置未載入教育部標準楷書，目前以系統字型顯示，部分字形可能與課本不同。";
+  else el.textContent = "";
+}
+function checkFont(){
+  try{
+    if(!document.fonts || !document.fonts.load){ FONT_OK = false; updateFontInfo(); return; }
+    document.fonts.load('20px "EduKai"', "成語練功房").then(()=>{
+      const faces = [...document.fonts].filter(f => f.family.replace(/["']/g, "") === "EduKai");
+      FONT_OK = faces.some(f => f.status === "loaded");
+      updateFontInfo();
+    }).catch(()=>{ FONT_OK = false; updateFontInfo(); });
+  }catch(e){ FONT_OK = false; updateFontInfo(); }
+}
+
+/* ---------- home ---------- */
+function home(msg=""){
+  const p = pool();
+  $app.innerHTML = `
+  <header class="hero">
+    ${tz("成語練功房")}
+    <p>${PUBLISHER}${GNAME[GRADE]}年級上學期・期中考複習</p>
+  </header>
+  ${ONE_GRADE ? "" : `<section class="panel">
+    <h2>1. 選擇年級</h2>
+    <div class="grades">
+      ${[3,4,5,6].map(g=>`<button class="gr" data-gr="${g}" aria-pressed="${g===GRADE}"><b>${GNAME[g]}年級</b><small>${DATA[g].lessons.reduce((n,L)=>n+L.items.length,0)} 個成語</small></button>`).join("")}
+    </div>
+  </section>`}
+  <section class="panel">
+    <h2>${ONE_GRADE ? 1 : 2}. 選擇要複習的課</h2>
+    <p class="hint">可以選很多課。已選 ${S.lessons.length} 課，共 ${p.length} 個成語。</p>
+    <div class="lessons${LESSONS.some(L=>L.title) ? " titled" : ""}">
+      ${LESSONS.map(L=>`<button class="lesson" data-l="${L.n}" aria-pressed="${S.lessons.includes(L.n)}"><b>第${L.n}課</b>${L.title ? `<small class="lt">${L.title}</small>` : ""}<small>${L.items.length} 個成語</small></button>`).join("")}
+    </div>
+    <div class="row">
+      <button class="pill" id="all">全選</button>
+      <button class="pill" id="none">全部取消</button>
+    </div>
+    <div class="row">
+      <span class="label">每次題數</span>
+      ${[10,20,0].map(n=>`<button class="pill" data-c="${n}" aria-pressed="${S.count===n}">${n?n+" 題":"全部"}</button>`).join("")}
+    </div>
+  </section>
+  <section class="panel">
+    <h2>${ONE_GRADE ? 2 : 3}. 選一個遊戲開始</h2>
+    <p class="warn" id="warn">${msg}</p>
+    <div class="games">
+      ${GAMES.map(g=>`<button class="game" data-g="${g.id}"><span class="ico">${g.ico}</span><span><b>${g.name}</b><small>${g.desc}</small></span></button>`).join("")}
+    </div>
+  </section>
+  <p class="note">本練習為老師自製的免費學習資源，例句與漫畫情境皆為原創。<br>成語範圍對應康軒版課程，非出版社官方產品。<br>
+    注音：中華民國教育部（Ministry of Education, R.O.C.）。《國語辭典簡編本》（版本編號：2014_20260929）網址：https://dict.concised.moe.edu.tw/；簡編本未收錄者依《重編國語辭典修訂本》；兩本皆未收錄者依單字讀音。<span id="fontinfo"></span></p>`;
+  updateFontInfo();
+  $app.querySelectorAll(".lesson").forEach(b=>b.onclick=()=>{
+    const n=+b.dataset.l; S.lessons = S.lessons.includes(n)? S.lessons.filter(x=>x!==n) : [...S.lessons,n].sort(); saveS(); home();
+  });
+  $app.querySelectorAll(".gr").forEach(b=>b.onclick=()=>{ const g=+b.dataset.gr; if(g!==GRADE){ setGrade(g); home(); } });
+  $app.querySelector("#all").onclick=()=>{S.lessons=LESSONS.map(l=>l.n);saveS();home();};
+  $app.querySelector("#none").onclick=()=>{S.lessons=[];saveS();home();};
+  $app.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{S.count=+b.dataset.c;saveS();home();});
+  $app.querySelectorAll(".game").forEach(b=>b.onclick=()=>{
+    if(!pool().length){ home("請先在上面選至少一課喔！"); return; }
+    start(b.dataset.g);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ---------- game shell ---------- */
+let G;
+function start(mode, customItems){
+  const items = customItems || pool();
+  if(mode==="mem") return memory(items);
+  if(mode==="flash") return flash(items);
+  const n = S.count ? Math.min(S.count, items.length) : items.length;
+  G = {mode, items, queue: shuffle(items).slice(0,n), i:0, score:0, wrong:[]};
+  question();
+}
+function bar(title, info){
+  return `<div class="bar"><button class="back" id="back">← 回首頁</button><h2>${title}</h2><span class="score">${info}</span></div>`;
+}
+function bindBack(){ $app.querySelector("#back").onclick=()=>home(); }
+const gname = id => GAMES.find(g=>g.id===id).name;
+
+function distractIdioms(item){
+  return shuffle(ALL.filter(x=>x.w!==item.w)).slice(0,3).map(x=>x.w);
+}
+
+function question(){
+  const q = G.queue[G.i], total=G.queue.length;
+  const head = bar(gname(G.mode), `第 ${G.i+1}／${total} 題　得分 <b>${G.score}</b>`) +
+    `<div class="progress"><i style="width:${G.i/total*100}%"></i></div>`;
+  let body="", answer, opts, big=false;
+
+  if(G.mode==="exp"){
+    answer=q.w; opts=shuffle([q.w,...distractIdioms(q)]);
+    body=`<div class="qcard"><span class="qtag">這是哪一個成語的意思？</span><p class="qtext">${q.exp}</p></div>`;
+  } else if(G.mode==="sent"){
+    answer=q.w; opts=shuffle([q.w,...distractIdioms(q)]);
+    body=`<div class="qcard"><span class="qtag">空格裡應該填哪一個成語？</span><p class="qtext">${q.sent.replace(q.w,'<span class="blank">？</span>')}</p></div>`;
+  } else if(G.mode==="miss"){
+    const key = q.keys[Math.floor(Math.random()*q.keys.length)];
+    const pos = [...q.w].indexOf(key);
+    G.pos=pos; answer=key; big=true;
+    const others = shuffle(ALLKEYS.filter(c=>c!==key && ![...q.w].includes(c))).slice(0,3);
+    opts=shuffle([key,...others]);
+    const shown=[...q.w].map((c,i)=>i===pos?"？":c).join("");
+    const cls=[...q.w].map((c,i)=>i===pos?"hole":"");
+    body=`<div class="qcard"><span class="qtag">缺了哪一個字？</span><div id="tzbox">${tz(shown,cls)}</div><p class="qtext" style="font-size:17px;color:var(--muted)">提示：${q.exp}</p></div>`;
+  } else if(G.mode==="comic"){
+    const cm=COMIC[q.w]; answer=q.w; opts=shuffle([q.w,...distractIdioms(q)]);
+    const panel=(p,n)=>`<div class="panel-c"><span class="pnum">${n}</span><span class="scene">${p[0]}</span><div class="bubble${p[2].startsWith("（")?" narr":""}" style="margin-top:14px">${p[2].startsWith("（")?p[2]:"「"+p[2]+"」"}</div><div class="who">${p[1]}</div></div>`;
+    body=`<div class="qcard"><span class="qtag">看漫畫，想一想要填哪個成語？</span>
+      <div class="strip">${panel(cm[0],1)}${panel(cm[1],2)}</div>
+      <p class="qtext">${cm[2].replace("＿＿",'<span class="blank">？</span>')}</p></div>`;
+  } else if(G.mode==="order"){
+    return orderQ(head, q);
+  }
+
+  $app.innerHTML = head + body +
+    `<div class="choices">${opts.map(o=>`<button class="choice${big?" big":""}" data-o="${o}">${o}</button>`).join("")}</div>
+     <div class="feedback" id="fb"></div>`;
+  bindBack();
+  $app.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+    const ok = b.dataset.o===answer;
+    $app.querySelectorAll(".choice").forEach(c=>{
+      c.disabled=true;
+      if(c.dataset.o===answer){ c.classList.add("right"); c.insertAdjacentHTML("beforeend",'<span class="circle"></span>'); }
+      else if(c===b) c.classList.add("wrong");
+      else c.classList.add("dim");
+    });
+    if(G.mode==="miss"){
+      const cls=[...q.w].map((c,i)=>i===G.pos?(ok?"filled":"hole"):"");
+      $app.querySelector("#tzbox").innerHTML=tz(q.w,cls);
+    }
+    if(G.mode==="sent"||G.mode==="comic"){ const bl=$app.querySelector(".blank"); bl.textContent=q.w; bl.style.color="var(--blue)"; bl.style.borderColor="var(--blue)"; }
+    finish(ok,q);
+  });
+}
+
+function finish(ok,q){
+  if(ok) G.score++; else G.wrong.push(q);
+  $app.querySelector(".score").innerHTML=`第 ${G.i+1}／${G.queue.length} 題　得分 <b>${G.score}</b>`;
+  const fb=$app.querySelector("#fb");
+  const last = G.i===G.queue.length-1;
+  fb.className="feedback show "+(ok?"good":"bad");
+  fb.innerHTML=`<h3>${ok?"⭕ 答對了！":"再想想～正確答案是「"+q.w+"」"}</h3>
+    ${pron(q.w)}
+    <p><span class="tagred">解釋</span>${q.exp}</p>
+    <p><span class="tagblue">例句</span>${q.sent}</p>
+    <div class="fx"><button class="btn" id="next">${last?"看成績":"下一題"}</button></div>`;
+  const nx=fb.querySelector("#next"); nx.focus({preventScroll:true});
+  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+  nx.onclick=()=>{ G.i++; if(G.i<G.queue.length) question(); else result(); };
+}
+
+/* ---------- 成語排排站 ---------- */
+function orderQ(head,q){
+  const chars=[...q.w];
+  let order; do{ order=shuffle(chars.map((c,i)=>i)); }while(order.map(i=>chars[i]).join("")===q.w);
+  let picked=[];
+  const draw=()=>{
+    const slots=chars.map((_,i)=>picked[i]!==undefined?chars[picked[i]]:"　");
+    $app.innerHTML = head + `<div class="qcard"><span class="qtag">依照正確順序點字，排出成語</span>
+      <div class="slots" id="slots">${tz(slots.join(""), slots.map(s=>s==="　"?"":"filled"))}</div>
+      <p class="qtext" style="font-size:17px;color:var(--muted)">提示：${q.exp}</p>
+      <div class="tiles">${order.map(i=>`<button class="tile" data-i="${i}" ${picked.includes(i)?"disabled":""}>${chars[i]}</button>`).join("")}</div>
+      </div><div class="feedback" id="fb"></div>`;
+    bindBack();
+    $app.querySelectorAll(".slots .tz span").forEach((s,idx)=>s.onclick=()=>{ if(picked[idx]!==undefined && !G.locked){ picked=picked.slice(0,idx); draw(); } });
+    $app.querySelectorAll(".tile").forEach(t=>t.onclick=()=>{
+      picked.push(+t.dataset.i); draw();
+      if(picked.length===chars.length){
+        G.locked=true;
+        const got=picked.map(i=>chars[i]).join("");
+        const ok=got===q.w;
+        $app.querySelectorAll(".tile").forEach(x=>x.disabled=true);
+        $app.querySelector("#slots").innerHTML = ok ? tz(q.w,chars.map(()=>"filled")) : tz(got,chars.map(()=>"hole"));
+        finish(ok,q);
+        setTimeout(()=>{G.locked=false},0);
+      }
+    });
+  };
+  G.locked=false; draw();
+}
+
+/* ---------- result ---------- */
+function result(){
+  const total=G.queue.length, pct=G.score/total;
+  const mark = pct===1?"滿分":pct>=.8?"優":pct>=.6?"甲":"加油";
+  const words = pct===1?"太厲害了，全部答對！":pct>=.8?"很棒！只差一點點就滿分了。":pct>=.6?"不錯喔，把錯的再練一次會更好。":"多練幾次一定會進步！";
+  $app.innerHTML = bar(gname(G.mode),"") + `
+  <div class="qcard result">
+    <div class="stamp">${mark}</div>
+    <p class="big">答對 <b style="color:var(--red)">${G.score}</b> 題，共 ${total} 題</p>
+    <p>${words}</p>
+    <div class="actions">
+      ${G.wrong.length?'<button class="btn" id="redo">只練錯的題目</button>':""}
+      <button class="btn ghost" id="again">再玩一次</button>
+      <button class="btn ghost" id="home2">換別的遊戲</button>
+    </div>
+    ${G.wrong.length?`<div class="wronglist"><h3>要再記熟的成語</h3>${G.wrong.map(w=>`<div class="witem"><b>${w.w}</b><span style="color:var(--muted);font-size:14px">　第${w.lesson}課</span><p class="zy-s">${zy(w.w)}</p><p>${w.exp}</p></div>`).join("")}</div>`:""}
+  </div>`;
+  bindBack();
+  const mode=G.mode, items=G.items, wrong=[...G.wrong];
+  if(wrong.length) $app.querySelector("#redo").onclick=()=>{ G={mode,items:wrong,queue:shuffle(wrong),i:0,score:0,wrong:[]}; question(); };
+  $app.querySelector("#again").onclick=()=>start(mode,items);
+  $app.querySelector("#home2").onclick=()=>home();
+  window.scrollTo(0,0);
+}
+
+/* ---------- 翻翻配對 ---------- */
+function memory(items){
+  const chosen=shuffle(items).slice(0,Math.min(6,items.length));
+  let cards=shuffle(chosen.flatMap(x=>[{id:x.id,t:"w",x},{id:x.id,t:"e",x}]));
+  let open=[], done=0, moves=0, busy=false;
+  const draw=()=>{
+    $app.innerHTML = bar(gname("mem"),`翻了 <b>${moves}</b> 次`) +
+      `<p style="color:var(--muted);margin:12px 0">把「成語」和它的「解釋」翻出來配成一對。共 ${chosen.length} 對。</p>
+       <div class="mem">${cards.map((c,i)=>`<button class="mcard ${c.t==="w"?"idiom":""} ${c.done?"done":""} ${open.includes(i)?"open":""}" data-i="${i}" aria-label="${c.done||open.includes(i)?(c.t==="w"?c.x.w:c.x.exp):"蓋著的卡片"}">${c.t==="w"?c.x.w:c.x.exp}</button>`).join("")}</div>
+       <div class="feedback" id="fb"></div>`;
+    bindBack();
+    $app.querySelectorAll(".mcard").forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i, c=cards[i];
+      if(busy||c.done||open.includes(i)) return;
+      open.push(i);
+      if(open.length===2){
+        moves++; const [a,b2]=open;
+        if(cards[a].id===cards[b2].id && a!==b2){
+          cards[a].done=cards[b2].done=true; open=[]; done++; draw();
+          if(done===chosen.length) setTimeout(memDone,500);
+        } else {
+          busy=true; draw();
+          $app.querySelectorAll(".mcard.open").forEach(el=>el.classList.add("miss"));
+          setTimeout(()=>{open=[];busy=false;draw();},1000);
+        }
+      } else draw();
+    });
+  };
+  const memDone=()=>{
+    const best=chosen.length, mark=moves<=best+2?"優":moves<=best*2?"甲":"完成";
+    $app.innerHTML = bar(gname("mem"),"") + `<div class="qcard result">
+      <div class="stamp">${mark}</div>
+      <p class="big">全部配對成功！翻了 <b style="color:var(--red)">${moves}</b> 次</p>
+      <p>翻越少次越厲害，最少只要 ${best} 次喔。</p>
+      <div class="actions"><button class="btn" id="again">再玩一局</button><button class="btn ghost" id="home2">換別的遊戲</button></div>
+      <div class="wronglist"><h3>這局的成語</h3>${chosen.map(w=>`<div class="witem"><b>${w.w}</b><p class="zy-s">${zy(w.w)}</p><p>${w.exp}</p></div>`).join("")}</div></div>`;
+    bindBack();
+    $app.querySelector("#again").onclick=()=>memory(items);
+    $app.querySelector("#home2").onclick=()=>home();
+  };
+  draw(); window.scrollTo(0,0);
+}
+
+/* ---------- 成語字卡 ---------- */
+function flash(items){
+  let deck=[...items], i=0, flipped=false;
+  const draw=()=>{
+    const c=deck[i];
+    $app.innerHTML = bar(gname("flash"),`第 <b>${i+1}</b>／${deck.length} 張`) +
+      `<div class="progress"><i style="width:${(i+1)/deck.length*100}%"></i></div>
+      <div class="qcard flash" id="card" role="button" tabindex="0" aria-label="點一下翻面">
+        ${flipped?`<div class="back-side">
+            <div style="text-align:center">${tz(c.w,[...c.w].map(ch=>c.keys.length<[...c.w].length&&c.keys.includes(ch)?"filled":""))}</div>
+            ${pron(c.w)}
+            <p><span class="tagred">解釋</span>${c.exp}</p>
+            <p><span class="tagblue">例句</span>${c.sent}</p>
+            <p style="font-size:15px;color:var(--muted)">第${c.lesson}課・${(LESSONS.find(L=>L.n===c.lesson)||{}).title||""}${c.keys.length<[...c.w].length ? "・生字「"+c.keys.join("、")+"」" : ""}</p>
+          </div>`
+        :`<span class="qtag">第${c.lesson}課</span>${tz(c.w)}<span class="qtag">點一下看解釋</span>`}
+      </div>
+      <div class="flash-nav">
+        <button class="btn ghost" id="prev" ${i===0?"disabled style='opacity:.4'":""}>← 上一張</button>
+        <button class="speak" id="mix">🔀 打亂順序</button>
+        <button class="btn" id="next">${i===deck.length-1?"完成":"下一張 →"}</button>
+      </div>`;
+    bindBack();
+    const card=$app.querySelector("#card");
+    card.onclick=()=>{flipped=!flipped;draw();};
+    card.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();flipped=!flipped;draw();} };
+    $app.querySelector("#mix").onclick=()=>{deck=shuffle(deck);i=0;flipped=false;draw();};
+    $app.querySelector("#prev").onclick=()=>{ if(i>0){i--;flipped=false;draw();} };
+    $app.querySelector("#next").onclick=()=>{ if(i<deck.length-1){i++;flipped=false;draw();} else home(); };
+  };
+  draw(); window.scrollTo(0,0);
+}
+
+setGrade(initialGrade());
+home();
+checkFont();
+</script>
+</body>
+</html>
